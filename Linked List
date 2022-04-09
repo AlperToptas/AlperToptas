@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct linkedList {
+        int data;
+        struct linkedList *next;
+    };
+    
+typedef struct linkedList node;
+node *head = NULL;
+node *end = NULL;
+
+void push(int newData);
+void append(int newData);
+void insertAfterThatData(int newData, int key);
+void delete(int dataToBeDeleted);
+void printList() ;
+
+int main(void) 
+{
+    append(1);
+    append(2);
+    append(3);
+    append(4);
+    append(200);
+    
+    push(1);
+    push(2);
+    push(3);
+    push(4);
+    push(100);
+    printList();
+    printf("\n");
+
+    insertAfterThatData(998, 200);
+
+    delete(1);
+    printList();
+
+    return 0;
+}
+
+void push(int newData) 
+{
+    node *newNode = (node *) malloc(sizeof(node));
+    newNode->data = newData;
+    newNode->next = head;
+    head = newNode;
+} 
+
+void append(int newData) 
+{
+    node *newNode; 
+    newNode = (node *) malloc(sizeof(node));
+    newNode->data = newData;
+    newNode->next = NULL;
+
+    if (head == NULL)
+    {
+        head = newNode;
+        end = newNode;
+    }
+    else 
+    {
+        end->next = newNode;
+        end = newNode;
+    }
+}
+
+void insertAfterThatData(int newData, int key) 
+{
+    int isInserted = 0;
+    
+    if (head == NULL)
+    {
+        printf("list is empty. push func is called and the first data is %d", newData);
+        push(newData);
+        isInserted = 1;
+    }
+    else 
+    {
+        node *searchNode = head;
+
+        while (searchNode != NULL)
+        {
+            if (searchNode->data == key)
+            {
+                node *newNode = (node *) malloc(sizeof(node));
+                newNode->data = newData;
+                newNode->next = searchNode->next;
+                searchNode->next = newNode;
+
+                isInserted = 1;
+
+                break;
+            }
+            searchNode = searchNode->next;    
+        }
+        if (isInserted == 0)
+        {
+            printf("there no element like this func's input, data can't be inserted.");
+        }
+    }
+}
+
+void delete(int dataToBeDeleted) {
+    node *searchNode = head;
+    int isDeleted = 0;
+    node *previous = NULL;
+
+    while (searchNode != NULL)
+    {
+        if (searchNode->data == dataToBeDeleted)
+        {
+            if (previous == NULL)
+            {
+                head = searchNode->next;
+            }
+            else
+            {
+                previous->next = searchNode->next;
+            }
+            free(searchNode);
+            isDeleted = 1;
+            break;
+        }
+        previous = searchNode;
+        searchNode = searchNode->next;
+    }
+    if (isDeleted == 0)
+    {
+        printf("Element not found, can't be deleted");
+    }
+}
+
+void printList() 
+{
+    node *oneOfTheNode = head;
+
+    while (oneOfTheNode != NULL)
+    {
+        printf("%d -> ", oneOfTheNode->data);
+        oneOfTheNode = oneOfTheNode->next;
+    }
+}
